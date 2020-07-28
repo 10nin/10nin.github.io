@@ -52,3 +52,7 @@ git push --set-upstream origin master
 例えば、私が使っているサービスでは下記のように設定を行いました。
 
 ![CNAME設定]({{absolute_url}}/images/cname.png)
+
+## SSL設定をする
+さらに24時間以上待てば、Settingsのドメイン関連設定をした箇所の近くに配置されている、GitHub PagesでSSLを利用するためのチェックボックスが使えるようになります。
+これをチェックすればLet's Encryptが発行する証明書を使って、Jekyllで作ったサイトを手軽にhttps化することができます。
