@@ -22,7 +22,7 @@ title: 10nin.com
 email: info@10nin.com
 description: >- # this means to ignore newlines until "baseurl:"
   “Study hard what interests you the most in the most undisciplined, irreverent and original manner possible.” —— Richard Feynmann
-baseurl: "/" # the subpath of your site, e.g. /blog
+baseurl: "" # the subpath of your site, e.g. /blog
 url: "https://www.10nin.com" # the base hostname & protocol for your site, e.g. http://example.com
 twitter_username: i0nin
 github_username:  10nin
