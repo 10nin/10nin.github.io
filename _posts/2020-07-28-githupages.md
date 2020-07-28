@@ -51,4 +51,4 @@ git push --set-upstream origin master
 これでGitHub側の設定は完了したので、使っているドメイン管理会社のポータル等からDNS設定にCNAME設定を追加します。
 例えば、私が使っているサービスでは下記のように設定を行いました。
 
-![CNAME設定](/images/cname.png)
+![CNAME設定]({{absolute_url}}/images/cname.png)
