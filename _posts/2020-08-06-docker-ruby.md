@@ -20,8 +20,8 @@ touch Gemfile
 
 ### Gemfileを書く
 最低限の内容をもったGemfileを書きます。
-rails入れるときに上書きされて書いている内容が壊れてしまうので、あとで使いまわせるようにDockefileと同じディレクトリにオリジナルを入れておきます。
-また、Gemfileを配置したら、touchコマンドを使ってGemfile.lockだけ作っておきます。
+Gemfileは、Railsを入れるときに上書きされて内容が壊れてしまうので、使いまわせるようにDockefileと同じディレクトリにオリジナルを入れるようにしています。
+また、Gemfileを配置したら`touch`コマンドを使って空の`Gemfile.lock`を作っておきます。
 
 ```console
 pwd #=> ~/docker-ruby
@@ -30,19 +30,21 @@ cp Gemfile src/Gemfile
 touch src/Gemfile.lock
 ```
 
-Gemfileの内容はこんな具合です。6系で固定しても良いと思いますが、メジャーバージョンが上がるのは年単位で先の話なので今は無視しています。
+Gemfileの内容はこんな具合です。
+バージョンを6系で固定する記述をしても良いと思いますが、メジャーバージョンが上がるのは年単位で先の話なので、今は無視しています。
 
-```Gemfile
+```ruby
 source 'https://rubygems.org'
 gem 'rails'
 ```
 
 ### Dockerfileを書く
 せっかくなのでRuby 2.7を使うことにしました。
-ハマりどころとして、Rails6からはWebpackerが標準で入ってくるのでyarnを整える必要があるため、その辺を追加するようにしています。
-（もっと良いやり方があるかもしれないです）
+ハマりどころとして、Rails6からはWebpackerが標準で入ってくるので、yarnを整える必要がああります。
+そのため、yarnを導入するためのコマンドをズラズラと記載しています。
+yarnの導入については、もっと良いやり方があるかもしれないです
 
-```Dockerfile
+```docker
 FROM ruby:2.7
 
 # シェルスクリプトとしてbashを利用
@@ -89,7 +91,8 @@ export DB_USER="root"
 export DB_PASS="db_password"
 ```
 
-二つ目のハマりポイントがここにあって、Docker + MySQL8の環境だと、[こちらのQiita記事](https://qiita.com/yensaki/items/9e453b7320ca2d0461c7)にあるように`caching_sha2_password`の認証形式に対応できないので、コマンドラインオプションでAuthentication Pluginを変更して運用するようにしています。
+二つ目のハマりポイントがここにあって、Docker + MySQL8の環境だと、[こちらのQiita記事](https://qiita.com/yensaki/items/9e453b7320ca2d0461c7)にあるように`caching_sha2_password`の認証形式に対応できません。
+先のQiita記事では設定ファイルをマウントさせていますが、できれば外側にファイルを用意したくないので、MySQLにコマンドラインオプションを渡してAuthentication Pluginを変更して運用するようにしています。
 
 ```yaml
 version: '3'
@@ -102,7 +105,6 @@ services:
     ports:
       - "3306:3306"
     command: --default-authentication-plugin=mysql_native_password
-    restart: always
 
   app:
     build: .
@@ -132,7 +134,7 @@ docker-compose run app rails new . --force --database=mysql --skip-bundle
 
 ここで、newするときに`--skip-bundle`が付いていると
 
-```
+```console
 Could not find gem 'mysql2 (>= 0.4.4)' in any of the gem sources listed in your Gemfile.
 Run `bundle install` to install missing gems.
 ```
@@ -198,3 +200,38 @@ Yay!ページが表示されたら動作確認完了です。
 これでDockerComposeとRails6 x MySQL8を組み合わせた環境ができあがりました！
 
 ![Rails6のYay!ページ]({{absolute_url}}/images/rails6_yay.png)
+
+## 最終的なディレクトリの姿
+最後に、参考程度に最終的なディレクトリの姿を掲載しておきます。
+srcディレクトリ以下にrailsのコードがまとまって、それより上のディレクトリにコンテナを動かすためのファイル群がまとまっているという感じで整理できているのがわかると思います。
+
+```console
+pwd #=> ~/docker-ruby
+tree -L 2
+.
+├── Dockerfile
+├── Gemfile
+├── docker-compose.yml
+└── src
+    ├── Gemfile
+    ├── Gemfile.lock
+    ├── README.md
+    ├── Rakefile
+    ├── app
+    ├── babel.config.js
+    ├── bin
+    ├── config
+    ├── config.ru
+    ├── db
+    ├── lib
+    ├── log
+    ├── node_modules
+    ├── package.json
+    ├── postcss.config.js
+    ├── public
+    ├── storage
+    ├── test
+    ├── tmp
+    ├── vendor
+    └── yarn.lock
+```
