@@ -1,4 +1,3 @@
-
 ---
 layout: post
 title:  "ファイルアップロードを伴うフォームで、remote trueが効かない問題でハマった話"
