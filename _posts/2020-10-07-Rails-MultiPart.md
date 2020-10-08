@@ -1,3 +1,4 @@
+
 ---
 layout: post
 title:  "ファイルアップロードを伴うフォームで、remote trueが効かない問題でハマった話"
@@ -11,7 +12,7 @@ categories: ruby ror
 なお、対象のコードはRails 4時代から継ぎ足し継ぎ足し使われてきていて、現在は5.2で稼働しています。
 
 ```slim
-form_with url: file_import_path, method: :post, multipart: true, remote: true do |f|
+form_with url: file_import_path, method: :post, multipart: true, data:{remote: true} do |f|
   ... なんかいろいろフォームの要素
   = file_field_tag :file
   = f.submit 'インポート', class: 'js-processing-btn'
@@ -52,4 +53,64 @@ end
 ### multipart: true だと、 remote: true を指定してもAjaxなフォームにならない
 
 結論としては、[teratailに書かれていたこちらの情報](https://teratail.com/questions/153491)の通りなのですが、`mutipart:true`を指定したフォームではリクエストも必ずhtmlで飛んでいくため、Ajaxなフォームにならないという事がわかりました。
-解決策として、先の回答にも上がってた remotipart という gem を導入し、問題解消を試みています。
+解決策として、先の回答にも上がってた remotipart という gem を導入し、問題解消を試みます。
+
+### gemの導入と準備
+
+ネット上の情報では、Rails 5系ではGithub情にある、特定のforkされた remotipart を使わないといけないという記述がありますが、既にこのパッチは本体に取り込まれているため、下記をGemfileに追加するだけでOKです。
+
+```ruby
+gem 'remotipart'
+```
+
+bundle install してgemをインストールします
+
+```bash
+bundle install
+```
+
+最後に、application.js等にremotipartを使う記述を加えます。
+独自に書き加えているものもあると思いますので、jquery系の読み込みをしている箇所の最後に加えることにしました。
+
+```js
+//= require jquery.remotipart
+```
+
+これで準備は完了です
+
+### 実際に使ってみる
+
+実際に使うときは、formが確実に`remote:true`で送られる必要がありますので、form_withを使うとか(form_withやform_tagの引数に)`data:{remote:true}`を渡して意図した通り動くように調整しておきます。
+私の場合は最初に使っていたフォームがそのまま使えたので、このままで行きます
+
+```slim
+form_with url: file_import_path, method: :post, multipart: true, data: {remote: true} do |f|
+  ... なんかいろいろフォームの要素
+  = file_field_tag :file
+  = f.submit 'インポート', class: 'js-processing-btn'
+.import-result
+  | 処理結果を表示します
+```
+
+### コントローラ側の罠
+
+コントローラ側はJSONをレンダリングして。。。と思って、当初の通り下記のコードを動かそうとしたのですが、ここで問題が。
+このコードで実行すると `Uncaught SyntaxError: Unexpected token ':' ...` というエラーで怒られてしまいます。
+
+```ruby
+def file_import
+  file_importer  = FileImporter.new(params[:file])
+  file_importer.import!
+  render json:{ errors: file_importer.errors }
+end
+```
+
+### ビューを作る
+
+調べたところjsonを返すのはNGで、`file_import.js.coffee`というビューを用意して、このビューの中にCoffeeScriptで処理を書いてやる必要がある事がわかりました。
+私のプロジェクトでは古いコードを引き継いでいるのでCoffeeScriptでビューを用意しましたが、場合によってはjsのビューで事足りるのかもしれません。
+
+なお、`file_import.json.jbuilder`というビューを作ってJSONを返す試みをしてみましたが、これも同様のエラーが出てしまってNGでしたので、JSONを返すのは諦めました。
+このように、CoffeeScriptのビューで処理完了後の挙動を書く事で、Ajaxな挙動を実現する事ができました。
+
+わかっている人にとってはなんということのない内容かもしれませんが、案外ネット上に使える情報がなかったので、ここにたどり着くまで苦労しました。
