@@ -33,6 +33,7 @@ kramdown:
 theme: minima
 plugins:
   - jekyll-feed
+google_analytics: UA-61554469-1
 
 # Exclude from processing.
 # The following items will not be processed, by default.
