@@ -30,6 +30,7 @@ timezone: Asia/Tokyo
 # Build settings
 kramdown:
   hard_wrap: true
+  html_to_native: true
 theme: minima
 plugins:
   - jekyll-feed
