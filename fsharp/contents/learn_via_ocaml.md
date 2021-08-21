@@ -12,7 +12,7 @@ disable_navi: "true"
 
 さっそく、OCamlを学んだ時に買って、一通り勉強した後本棚の奥にしまい込んでいた、浅井 健一さんの「プログラミングの基礎」を引っ張り出してきました。
 
-<iframe style="width:120px;height:240px;" marginwidth="0" marginheight="0" scrolling="no" frameborder="0" src="//rcm-fe.amazon-adsystem.com/e/cm?lt1=_blank&bc1=000000&IS2=1&bg1=FFFFFF&fc1=000000&lc1=0000FF&t=10nin-22&language=ja_JP&o=9&p=8&l=as4&m=amazon&f=ifr&ref=as_ss_li_til&asins=4781911609&linkId=e8834437f66113d3965b531c662c9bf4"></iframe>
+<iframe style="width:120px;height:240px;" marginwidth="0" marginheight="0" scrolling="no" frameborder="0" src="//rcm-fe.amazon-adsystem.com/e/cm?lt1=_blank&bc1=000000&IS2=1&bg1=FFFFFF&fc1=000000&lc1=0000FF&t=10nin-22&language=ja_JP&o=9&p=8&l=as4&m=amazon&f=ifr&ref=as_ss_li_til&asins=4781911609&linkId=e8834437f66113d3965b531c662c9bf4" />
 
 まずはこの教科書に沿って学んでいくことにします。
 
