@@ -1,5 +1,7 @@
 ---
 layout: page
+title: F#を学ぶ:F#の導入
+disable_navi: "true"
 ---
 
 ## F#を利用できる環境を整える
