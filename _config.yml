@@ -30,10 +30,6 @@ timezone: Asia/Tokyo
 # Build settings
 kramdown:
   hard_wrap: true
-  enable_coderay: true
-  coderay_line_numbers: true
-  coderay_tab_width: 2
-  gfm_quirks: true
 theme: minima
 plugins:
   - jekyll-feed
