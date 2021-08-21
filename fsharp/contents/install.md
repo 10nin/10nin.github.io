@@ -1,5 +1,5 @@
 ---
-layout: post
+layout: page
 title:  "F#を学ぶ：F#の導入"
 ---
 
